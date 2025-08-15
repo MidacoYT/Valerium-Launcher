@@ -58,15 +58,154 @@ input::-webkit-inner-spin-button {
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: 1001;
     box-shadow: var(--shadow-xl);
     transition: var(--transition);
+}
+
+/* État rétracté de la sidebar */
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar.collapsed .sidebar-title,
+.sidebar.collapsed .sidebar-subtitle,
+.sidebar.collapsed .nav-settings-btn span,
+.sidebar.collapsed .player-name,
+.sidebar.collapsed .player-status {
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.sidebar.collapsed .sidebar-logo {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.5rem;
+}
+
+.sidebar.collapsed .sidebar-logo img {
+    width: 32px;
+    height: 32px;
+}
+
+.sidebar.collapsed .nav-settings-btn {
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    min-height: 48px;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.sidebar.collapsed .nav-settings-btn .nav-icon {
+    margin: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.sidebar.collapsed .nav-settings-btn .nav-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.sidebar.collapsed .player-options {
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem;
+    min-height: 48px;
+    text-align: center;
+}
+
+.sidebar.collapsed .player-head {
+    margin-right: 0;
+    height: 36px;
+    width: 36px;
+    border-width: 2px;
+    border-radius: var(--border-radius);
+}
+
+.sidebar.collapsed .player-info {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-settings-btn {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.25rem;
+    margin-top: 0.75rem;
+}
+
+/* Bouton de toggle de la sidebar */
+.sidebar-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--background-element);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    color: var(--color);
+}
+
+.sidebar.collapsed .sidebar-toggle {
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 24px;
+    height: 24px;
+}
+
+.sidebar-toggle:hover {
+    background: var(--background-secondary);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.toggle-icon {
+    font-size: 0.75rem;
+    transition: var(--transition);
+}
+
+.sidebar.collapsed .toggle-icon {
+    transform: rotate(180deg);
+    font-size: 0.625rem;
+}
+
+/* Ajustement du contenu principal quand la sidebar est rétractée */
+.main-content.sidebar-collapsed {
+    margin-left: 80px;
+}
+
+/* Ajustement de la dragbar quand la sidebar est rétractée */
+.dragbar.sidebar-collapsed {
+    left: 80px;
+    width: calc(100% - 80px);
 }
 
 .sidebar-header {
     padding: 2rem;
     border-bottom: 1px solid var(--border-color);
     text-align: center;
+    position: relative;
+}
+
+.sidebar.collapsed .sidebar-header {
+    padding: 1rem 0.5rem;
+    padding-top: 1.5rem;
 }
 
 .sidebar-logo {
@@ -107,6 +246,11 @@ input::-webkit-inner-spin-button {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.sidebar.collapsed .nav-box {
+    padding: 1rem 0.5rem;
+    gap: 0.25rem;
 }
 
 .sidebar .nav-settings-btn {
@@ -160,9 +304,33 @@ input::-webkit-inner-spin-button {
     font-size: 1.25rem;
 }
 
+.sidebar .nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar.collapsed .nav-settings-btn .nav-icon {
+    margin: 0;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar.collapsed .nav-settings-btn .nav-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
 .sidebar-footer {
     padding: 1.5rem;
     border-top: 1px solid var(--border-color);
+}
+
+.sidebar.collapsed .sidebar-footer {
+    padding: 1rem 0.5rem;
 }
 
 /* Utilisation des player-options existants */

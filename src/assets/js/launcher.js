@@ -36,8 +36,18 @@ function toggleSidebarVisibility(panelId) {
         if (sidebar) sidebar.style.display = 'flex';
         if (dragbar) dragbar.style.display = 'block';
         if (mainContent) {
-            mainContent.style.marginLeft = '280px';
-            mainContent.style.width = 'calc(100% - 280px)';
+            // Vérifier si la sidebar est rétractée et respecter cet état
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            const sidebarWidth = isCollapsed ? '80px' : '280px';
+            mainContent.style.marginLeft = sidebarWidth;
+            mainContent.style.width = `calc(100% - ${sidebarWidth})`;
+        }
+        if (dragbar) {
+            // Ajuster la dragbar selon l'état de la sidebar
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            const sidebarWidth = isCollapsed ? '80px' : '280px';
+            dragbar.style.left = sidebarWidth;
+            dragbar.style.width = `calc(100% - ${sidebarWidth})`;
         }
     }
 }
@@ -144,6 +154,59 @@ class Launcher {
                 // Changer vers le panel settings
                 changePanel('settings');
             });
+        }
+
+        // Gestion du toggle de la sidebar
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const dragbar = document.querySelector('.dragbar');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                
+                if (isCollapsed) {
+                    // Étendre la sidebar
+                    sidebar.classList.remove('collapsed');
+                    mainContent.classList.remove('sidebar-collapsed');
+                    dragbar.classList.remove('sidebar-collapsed');
+                    
+                    // Ajuster les styles inline pour s'assurer qu'ils s'appliquent
+                    mainContent.style.marginLeft = '280px';
+                    mainContent.style.width = 'calc(100% - 280px)';
+                    dragbar.style.left = '280px';
+                    dragbar.style.width = 'calc(100% - 280px)';
+                } else {
+                    // Rétracter la sidebar
+                    sidebar.classList.add('collapsed');
+                    mainContent.classList.add('sidebar-collapsed');
+                    dragbar.classList.add('sidebar-collapsed');
+                    
+                    // Ajuster les styles inline pour s'assurer qu'ils s'appliquent
+                    mainContent.style.marginLeft = '80px';
+                    mainContent.style.width = 'calc(100% - 80px)';
+                    dragbar.style.left = '80px';
+                    dragbar.style.width = 'calc(100% - 80px)';
+                }
+                
+                // Sauvegarder l'état dans le localStorage
+                localStorage.setItem('sidebarCollapsed', !isCollapsed);
+            });
+            
+            // Restaurer l'état de la sidebar au chargement
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('sidebar-collapsed');
+                dragbar.classList.add('sidebar-collapsed');
+                
+                // Appliquer les styles inline au chargement
+                mainContent.style.marginLeft = '80px';
+                mainContent.style.width = 'calc(100% - 80px)';
+                dragbar.style.left = '80px';
+                dragbar.style.width = 'calc(100% - 80px)';
+            }
         }
 
         // Mise à jour du profil utilisateur

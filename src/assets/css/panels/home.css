@@ -311,82 +311,76 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 90px;
+    min-height: 90px;
     background: var(--background-glass);
     backdrop-filter: blur(20px);
     border-radius: var(--border-radius-xl);
-    padding: 0 2rem;
+    padding: 1.5rem 2rem;
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-color);
     margin-top: auto;
+    transition: var(--transition);
 }
 
 .play-elements {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .play-instance {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     position: relative;
-    background: var(--gradient-primary);
-    border-radius: var(--border-radius-xl);
-    height: 60px;
-    padding: 0 1rem;
-    box-shadow: var(--shadow-lg);
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.play-instance:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-xl);
 }
 
 .play-btn {
     border: none;
-    border-radius: var(--border-radius);
-    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-xl);
+    background: var(--gradient-primary);
     color: white;
     font-size: 1.5rem;
     font-weight: 700;
     padding: 0.75rem 1.5rem;
     cursor: pointer;
-    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-lg);
     transition: var(--transition);
+    min-width: 120px;
 }
 
 .play-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+    background: var(--gradient-primary-hover);
 }
 
 .instance-select {
     display: flex;
     align-items: center;
-    position: absolute;
-    right: -2px;
-    top: -2px;
-    color: white;
+    justify-content: center;
+    color: var(--color);
     font-size: 0.875rem;
     font-weight: 600;
-    height: calc(100% + 4px);
     background: var(--background-element);
     text-align: center;
     border-radius: var(--border-radius-lg);
-    padding: 0 1rem;
+    padding: 0.75rem 1rem;
     cursor: pointer;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-color);
     transition: var(--transition);
+    min-width: 100px;
 }
 
 .instance-select:hover {
     background: var(--background-secondary);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .instance-select:before {
@@ -406,9 +400,24 @@
     background: var(--background-glass);
     backdrop-filter: blur(20px);
     border-radius: var(--border-radius-xl);
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .progress-bar {
@@ -418,6 +427,7 @@
     border-radius: 4px;
     overflow: hidden;
     margin: 1rem 0;
+    border: none;
 }
 
 .progress-bar::-webkit-progress-bar {
@@ -436,6 +446,25 @@
     font-weight: 600;
     color: var(--color);
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.info-starting-game-text:before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--element-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Instance popup */

@@ -106,14 +106,13 @@ class Home {
         let instancesList = await config.getInstanceList()
         let instanceSelect = instancesList.find(i => i.name == configClient?.instance_selct) ? configClient?.instance_selct : null
 
-        let instanceBTN = document.querySelector('.play-instance')
+        let instanceBTN = document.querySelector('.instance-select')
         let instancePopup = document.querySelector('.instance-popup')
         let instancesListPopup = document.querySelector('.instances-List')
         let instanceCloseBTN = document.querySelector('.close-popup')
 
         if (instancesList.length === 1) {
             document.querySelector('.instance-select').style.display = 'none'
-            instanceBTN.style.paddingRight = '0'
         }
 
         if (!instanceSelect) {
@@ -161,38 +160,46 @@ class Home {
             }
         })
 
+        // Événement pour la sélection d'instance
         instanceBTN.addEventListener('click', async e => {
+            e.stopPropagation();
+            
             let configClient = await this.db.readData('configClient')
             let instanceSelect = configClient.instance_selct
             let auth = await this.db.readData('accounts', configClient.account_selected)
 
-            if (e.target.classList.contains('instance-select')) {
-                instancesListPopup.innerHTML = ''
-                for (let instance of instancesList) {
-                    if (instance.whitelistActive) {
-                        instance.whitelist.map(whitelist => {
-                            if (whitelist == auth?.name) {
-                                if (instance.name == instanceSelect) {
-                                    instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements active-instance">${instance.name}</div>`
-                                } else {
-                                    instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements">${instance.name}</div>`
-                                }
+            instancesListPopup.innerHTML = ''
+            for (let instance of instancesList) {
+                if (instance.whitelistActive) {
+                    instance.whitelist.map(whitelist => {
+                        if (whitelist == auth?.name) {
+                            if (instance.name == instanceSelect) {
+                                instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements active-instance">${instance.name}</div>`
+                            } else {
+                                instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements">${instance.name}</div>`
                             }
-                        })
-                    } else {
-                        if (instance.name == instanceSelect) {
-                            instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements active-instance">${instance.name}</div>`
-                        } else {
-                            instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements">${instance.name}</div>`
                         }
+                    })
+                } else {
+                    if (instance.name == instanceSelect) {
+                        instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements active-instance">${instance.name}</div>`
+                    } else {
+                        instancesListPopup.innerHTML += `<div id="${instance.name}" class="instance-elements">${instance.name}</div>`
                     }
                 }
-
-                instancePopup.style.display = 'flex'
             }
 
-            if (!e.target.classList.contains('instance-select')) this.startGame()
+            instancePopup.style.display = 'flex'
         })
+
+        // Événement pour le bouton play
+        const playBtn = document.querySelector('.play-btn');
+        if (playBtn) {
+            playBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                this.startGame();
+            });
+        }
 
         instanceCloseBTN.addEventListener('click', () => instancePopup.style.display = 'none')
     }
@@ -204,7 +211,7 @@ class Home {
         let authenticator = await this.db.readData('accounts', configClient.account_selected)
         let options = instance.find(i => i.name == configClient.instance_selct)
 
-        let playInstanceBTN = document.querySelector('.play-instance')
+        let playElements = document.querySelector('.play-elements')
         let infoStartingBOX = document.querySelector('.info-starting-game')
         let infoStarting = document.querySelector(".info-starting-game-text")
         let progressBar = document.querySelector('.progress-bar')
@@ -249,7 +256,7 @@ class Home {
 
         launch.Launch(opt);
 
-        playInstanceBTN.style.display = "none"
+        playElements.style.display = "none"
         infoStartingBOX.style.display = "block"
         progressBar.style.display = "";
         ipcRenderer.send('main-window-progress-load')
@@ -307,7 +314,7 @@ class Home {
             };
             ipcRenderer.send('main-window-progress-reset')
             infoStartingBOX.style.display = "none"
-            playInstanceBTN.style.display = "flex"
+            playElements.style.display = "flex"
             infoStarting.innerHTML = `Vérification`
             new logger(pkg.name, '#7289da');
             console.log('Close');
@@ -328,7 +335,7 @@ class Home {
             };
             ipcRenderer.send('main-window-progress-reset')
             infoStartingBOX.style.display = "none"
-            playInstanceBTN.style.display = "flex"
+            playElements.style.display = "flex"
             infoStarting.innerHTML = `Vérification`
             new logger(pkg.name, '#7289da');
             console.log(err);

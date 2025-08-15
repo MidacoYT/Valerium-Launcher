@@ -566,5 +566,7 @@
         padding: 1rem;
     }
     
-    /* Suppression de la règle dupliquée .play-instance qui causait des conflits */
+    .play-instance {
+        width: 100%;
+    }
 }

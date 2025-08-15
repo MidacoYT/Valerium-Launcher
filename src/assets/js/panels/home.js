@@ -15,7 +15,7 @@ class Home {
         this.news()
         this.socialLick()
         this.instancesSelect()
-        // Suppression de la référence au bouton settings qui n'existe plus
+        document.querySelector('.settings-btn').addEventListener('click', e => changePanel('settings'))
     }
 
     async news() {
@@ -110,15 +110,6 @@ class Home {
         let instancePopup = document.querySelector('.instance-popup')
         let instancesListPopup = document.querySelector('.instances-List')
         let instanceCloseBTN = document.querySelector('.close-popup')
-        let playBtn = document.querySelector('.play-btn')
-
-        // Event listener spécifique pour le bouton play
-        if (playBtn) {
-            playBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Empêcher la propagation vers play-instance
-                this.startGame();
-            });
-        }
 
         if (instancesList.length === 1) {
             document.querySelector('.instance-select').style.display = 'none'
@@ -171,12 +162,6 @@ class Home {
         })
 
         instanceBTN.addEventListener('click', async e => {
-            // Empêcher la propagation de l'event si on clique sur le bouton play
-            if (e.target.classList.contains('play-btn')) {
-                this.startGame();
-                return;
-            }
-            
             let configClient = await this.db.readData('configClient')
             let instanceSelect = configClient.instance_selct
             let auth = await this.db.readData('accounts', configClient.account_selected)
@@ -205,6 +190,8 @@ class Home {
 
                 instancePopup.style.display = 'flex'
             }
+
+            if (!e.target.classList.contains('instance-select')) this.startGame()
         })
 
         instanceCloseBTN.addEventListener('click', () => instancePopup.style.display = 'none')

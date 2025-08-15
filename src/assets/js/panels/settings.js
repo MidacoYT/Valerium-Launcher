@@ -43,7 +43,7 @@ class Settings {
                 const targetElement = document.getElementById(targetTab);
                 if (targetElement) {
                     targetElement.classList.add('active-container-settings');
-                }
+            }
             });
         });
     }

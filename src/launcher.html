@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+        <link rel="stylesheet" href="assets/css/launcher.css">
+    </head>
+    <body>
+        <div class="dragbar"></div>
+        <div class="darwin">
+            <div class="frame">
+                <div id="close" class="button-frame darwin-icon-close"></div>
+                <div id="minimize" class="button-frame darwin-icon-minimize"></div>
+                <div id="maximize" class="button-frame darwin-icon-maximize"></div>
+
+            </div>
+        </div>
+        <div class="other">
+            <div class="frame">
+                <div id="minimize" class="button-frame icon-minimize"></div>
+                <div id="maximize" class="button-frame icon-maximize"></div>
+                <div id="close" class="button-frame icon-close"></div>
+            </div>
+        </div>
+
+        <div class="popup">
+            <div class="popup-tab">
+                <div class="popup-title"></div>
+                <div class="popup-content"></div>
+                <div class="popup-options">
+                    <button class="popup-button">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar utilisant les éléments existants -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/images/icon.png" alt="Valerium" />
+                </div>
+                <div class="sidebar-title">Valerium</div>
+                <div class="sidebar-subtitle">Launcher</div>
+            </div>
+
+            <div class="nav-box">
+                <div id="home" class="nav-settings-btn active-settings-BTN" data-panel="home">
+                    <div class="nav-icon">🏠</div>
+                    <span>Accueil</span>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="player-options">
+                    <div class="player-head"></div>
+                    <div class="player-info">
+                        <div class="player-name">Joueur</div>
+                        <div class="player-status">Non connecté</div>
+                    </div>
+                </div>
+                <div class="sidebar-settings-btn">
+                    <div class="icon-settings"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu principal -->
+        <div class="main-content">
+            <div class="panels"></div>
+        </div>
+
+        <script src="assets/js/launcher.js" type="module"></script>
+    </body>
+</html>

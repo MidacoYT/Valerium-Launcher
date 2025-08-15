@@ -1,0 +1,570 @@
+.home .container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Status server                                                               *
+ *                                                                             *
+ ******************************************************************************/
+
+.status-server {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--background-glass);
+    backdrop-filter: blur(20px);
+    width: 400px;
+    max-width: 90%;
+    height: 80px;
+    color: var(--color);
+    border-radius: var(--border-radius-xl);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.status-server:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.server-status-icon {
+    height: 48px;
+    width: 48px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.server-status-icon:hover {
+    transform: scale(1.1);
+}
+
+.server-status-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color);
+    margin-bottom: 0.25rem;
+}
+
+.server-status-text {
+    font-size: 0.875rem;
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.server-status-infos .red {
+    color: var(--error-color);
+}
+
+.status-player-count {
+    background: var(--gradient-primary);
+    min-width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+.player-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.status-player-count:after {
+    position: absolute;
+    content: '';
+    width: 12px;
+    height: 12px;
+    top: 8px;
+    right: 8px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: var(--success-color);
+    box-shadow: 0 0 0 2px var(--success-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.red:after {
+    background: var(--error-color);
+    box-shadow: 0 0 0 2px var(--error-color);
+}
+
+.home-bottom {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 120px);
+    display: flex;
+    gap: 2rem;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * news server                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+.new-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    height: 100%;
+    background: var(--background-glass);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+.titre-tab-new {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius-lg);
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.news-list {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.news-block {
+    background: var(--background-element);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.news-block:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.news-header {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.news-header img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius);
+    margin-right: 1rem;
+}
+
+.header-text {
+    flex: 1;
+}
+
+.header-text .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color);
+    margin-bottom: 0.5rem;
+}
+
+.date {
+    text-align: center;
+    margin-left: 1rem;
+}
+
+.date .day {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--element-color);
+}
+
+.date .month {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+}
+
+.news-content {
+    padding: 1.5rem;
+}
+
+.news-content .bbWrapper {
+    color: var(--color);
+    line-height: 1.6;
+}
+
+.news-author {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+}
+
+.news-author span {
+    color: var(--element-color);
+    font-weight: 600;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * social server                                                               *
+ *                                                                             *
+ ******************************************************************************/
+
+.social-tab {
+    position: absolute;
+    display: flex;
+    bottom: 0;
+    right: 0;
+    width: 15%;
+    height: calc(80% - 1rem);
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.social-list {
+    border-radius: var(--border-radius-xl);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.social-block {
+    display: flex;
+    background: var(--background-glass);
+    backdrop-filter: blur(20px);
+    width: 90px;
+    height: 90px;
+    border-radius: var(--border-radius-lg);
+    font-size: 2rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.social-block:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.social-block .icon-social {
+    pointer-events: none;
+    background-repeat: no-repeat;
+    height: 55%;
+    width: 55%;
+    filter: var(--svg-color);
+    transition: var(--transition);
+}
+
+.social-block:hover .icon-social {
+    filter: brightness(0) invert(1);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * game controls                                                                *
+ *                                                                             *
+ ******************************************************************************/
+
+.game-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90px;
+    background: var(--background-glass);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-xl);
+    padding: 0 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+.play-elements {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.play-instance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background: var(--gradient-primary);
+    border-radius: var(--border-radius-xl);
+    height: 60px;
+    padding: 0 1rem;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.play-instance:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.play-btn {
+    border: none;
+    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+
+.play-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.instance-select {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    height: calc(100% + 4px);
+    background: var(--background-element);
+    text-align: center;
+    border-radius: var(--border-radius-lg);
+    padding: 0 1rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.instance-select:hover {
+    background: var(--background-secondary);
+    transform: scale(1.05);
+}
+
+.instance-select:before {
+    content: '▼';
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
+    transition: var(--transition);
+}
+
+.instance-select:hover:before {
+    transform: rotate(180deg);
+}
+
+.info-starting-game {
+    display: none;
+    text-align: center;
+    background: var(--background-glass);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--background-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-bar::-webkit-progress-bar {
+    background: var(--background-secondary);
+    border-radius: 4px;
+}
+
+.progress-bar::-webkit-progress-value {
+    background: var(--gradient-primary);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.info-starting-game-text {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color);
+    margin-bottom: 1rem;
+}
+
+/* Instance popup */
+.instance-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-glass);
+    backdrop-filter: blur(20px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.instances-tab {
+    background: var(--background-element);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+}
+
+.instances-tab p {
+    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--color);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.close-popup {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-popup:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.instances-List {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.instance-elements {
+    padding: 1rem 1.5rem;
+    background: var(--background-secondary);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--color);
+}
+
+.instance-elements:hover {
+    background: var(--element-color);
+    color: white;
+    transform: translateX(8px);
+}
+
+.active-instance {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .home-bottom {
+        flex-direction: column;
+    }
+    
+    .new-tab {
+        width: 100%;
+        height: auto;
+    }
+    
+    .social-tab {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+    
+    .social-list {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .home .container {
+        padding: 1rem;
+    }
+    
+    .status-server {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+        height: auto;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    /* Suppression de la règle dupliquée .play-instance qui causait des conflits */
+}

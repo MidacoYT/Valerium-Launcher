@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Télécharger Valerium Launcher - Serveur Minecraft PvP Faction</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="src/img/icon.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="src/img/valerium.png" alt="Valerium Logo" class="logo-img">
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="home" class="nav-link">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a href="home#serveur" class="nav-link">Serveur</a>
+                </li>
+                <li class="nav-item">
+                    <a href="home#regles" class="nav-link">Règles</a>
+                </li>
+                <li class="nav-item">
+                    <a href="home#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Hero Download -->
+    <section class="download-hero">
+        <div class="container">
+            <div class="download-content">
+                <div class="download-text">
+                    <h1 class="download-title">
+                        <span class="gradient-text">Télécharger</span>
+                        <br>Valerium Launcher
+                    </h1>
+                    <p class="download-subtitle">Choisissez votre plateforme et commencez l'aventure Farm2Win dès maintenant !</p>
+                    
+                    <div class="version-info">
+                        <div class="version-badge">
+                            <i class="fas fa-code-branch"></i>
+                            <span>Version 1.7.10</span>
+                        </div>
+                        <div class="version-badge">
+                            <i class="fas fa-download"></i>
+                            <span>Dernière version</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="download-image">
+                    <img src="src/img/valerium.png" alt="Valerium Launcher" class="launcher-preview">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Téléchargements -->
+    <section class="downloads-section">
+        <div class="container">
+            <h2 class="section-title">Choisissez votre plateforme</h2>
+            
+            <div class="downloads-grid">
+                <!-- Windows -->
+                <div class="download-card windows">
+                    <div class="download-card-header">
+                        <div class="platform-icon">
+                            <i class="fab fa-windows"></i>
+                        </div>
+                        <div class="platform-info">
+                            <h3>Windows</h3>
+                            <p>Windows 7, 8, 10, 11</p>
+                        </div>
+                    </div>
+                    <div class="download-card-body">
+                        <div class="file-info">
+                            <span class="file-name">Valerium-Launcher-win-x64.exe</span>
+                            <span class="file-size">~150 MB</span>
+                        </div>
+                        <div class="requirements">
+                            <h4>Configuration requise :</h4>
+                            <ul>
+                                <li>Windows 7 ou supérieur</li>
+                                <li>4 GB RAM minimum</li>
+                                <li>2 GB espace disque</li>
+                                <li>Java 8+</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="download-card-footer">
+                        <button class="btn btn-primary download-btn" onclick="downloadWindows()">
+                            <i class="fab fa-windows"></i>
+                            Télécharger pour Windows
+                        </button>
+                        <div class="download-stats">
+                            <span><i class="fas fa-download"></i> 15,420 téléchargements</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- macOS -->
+                <div class="download-card mac">
+                    <div class="download-card-header">
+                        <div class="platform-icon">
+                            <i class="fab fa-apple"></i>
+                        </div>
+                        <div class="platform-info">
+                            <h3>macOS</h3>
+                            <p>macOS 10.12 ou supérieur</p>
+                        </div>
+                    </div>
+                    <div class="download-card-body">
+                        <div class="file-info">
+                            <span class="file-name">Valerium-Launcher-mac-universal.dmg</span>
+                            <span class="file-size">~180 MB</span>
+                        </div>
+                        <div class="requirements">
+                            <h4>Configuration requise :</h4>
+                            <ul>
+                                <li>macOS 10.12 ou supérieur</li>
+                                <li>4 GB RAM minimum</li>
+                                <li>2 GB espace disque</li>
+                                <li>Java 8+</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="download-card-footer">
+                        <button class="btn btn-primary download-btn" onclick="downloadMac()">
+                            <i class="fab fa-apple"></i>
+                            Télécharger pour macOS
+                        </button>
+                        <div class="download-stats">
+                            <span><i class="fas fa-download"></i> 8,230 téléchargements</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Linux -->
+                <div class="download-card linux">
+                    <div class="download-card-header">
+                        <div class="platform-icon">
+                            <i class="fab fa-linux"></i>
+                        </div>
+                        <div class="platform-info">
+                            <h3>Linux</h3>
+                            <p>Ubuntu, Debian, Fedora, etc.</p>
+                        </div>
+                    </div>
+                    <div class="download-card-body">
+                        <div class="file-info">
+                            <span class="file-name">Valerium-Launcher-linux-x86_64.AppImage</span>
+                            <span class="file-size">~160 MB</span>
+                        </div>
+                        <div class="requirements">
+                            <h4>Configuration requise :</h4>
+                            <ul>
+                                <li>Linux 64-bit</li>
+                                <li>4 GB RAM minimum</li>
+                                <li>2 GB espace disque</li>
+                                <li>Java 8+</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="download-card-footer">
+                        <button class="btn btn-primary download-btn" onclick="downloadLinux()">
+                            <i class="fab fa-linux"></i>
+                            Télécharger pour Linux
+                        </button>
+                        <div class="download-stats">
+                            <span><i class="fas fa-download"></i> 5,890 téléchargements</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Instructions -->
+    <section class="instructions-section">
+        <div class="container">
+            <h2 class="section-title">Instructions d'installation</h2>
+            
+            <div class="instructions-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('windows-install')">
+                        <i class="fab fa-windows"></i>
+                        Windows
+                    </button>
+                    <button class="tab-btn" onclick="showTab('mac-install')">
+                        <i class="fab fa-apple"></i>
+                        macOS
+                    </button>
+                    <button class="tab-btn" onclick="showTab('linux-install')">
+                        <i class="fab fa-linux"></i>
+                        Linux
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Windows Instructions -->
+                    <div id="windows-install" class="tab-panel active">
+                        <div class="instruction-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Téléchargez le fichier</h4>
+                                    <p>Cliquez sur "Télécharger pour Windows" ci-dessus pour obtenir le fichier .exe</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Exécutez l'installateur</h4>
+                                    <p>Double-cliquez sur le fichier téléchargé et suivez les instructions d'installation</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Lancez le launcher</h4>
+                                    <p>Ouvrez le launcher Valerium depuis le menu Démarrer ou le bureau</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Connectez-vous</h4>
+                                    <p>Créez votre compte ou connectez-vous et cliquez sur "Jouer"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- macOS Instructions -->
+                    <div id="mac-install" class="tab-panel">
+                        <div class="instruction-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Téléchargez le fichier</h4>
+                                    <p>Cliquez sur "Télécharger pour macOS" ci-dessus pour obtenir le fichier .dmg</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Ouvrez le fichier DMG</h4>
+                                    <p>Double-cliquez sur le fichier .dmg et faites glisser l'application dans le dossier Applications</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Autorisez l'application</h4>
+                                    <p>Si nécessaire, allez dans Préférences Système > Sécurité et confidentialité pour autoriser l'application</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Lancez le launcher</h4>
+                                    <p>Ouvrez le launcher depuis le dossier Applications et connectez-vous</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Linux Instructions -->
+                    <div id="linux-install" class="tab-panel">
+                        <div class="instruction-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Téléchargez le fichier</h4>
+                                    <p>Cliquez sur "Télécharger pour Linux" ci-dessus pour obtenir le fichier .AppImage</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Rendez le fichier exécutable</h4>
+                                    <p>Ouvrez un terminal et tapez : <code>chmod +x Valerium-Launcher-linux-x86_64.AppImage</code></p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Lancez l'application</h4>
+                                    <p>Double-cliquez sur le fichier .AppImage ou exécutez-le depuis le terminal</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Connectez-vous</h4>
+                                    <p>Créez votre compte ou connectez-vous et commencez à jouer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Questions fréquentes</h2>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h4>Le launcher ne se lance pas, que faire ?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Vérifiez que vous avez Java 8 ou supérieur installé. Vous pouvez télécharger Java depuis le site officiel d'Oracle ou utiliser OpenJDK.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h4>Puis-je jouer sans installer le launcher ?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Non, le launcher est obligatoire car il contient tous les mods nécessaires et les configurations spécifiques au serveur Valerium.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h4>Le téléchargement est lent, que faire ?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Les fichiers sont hébergés sur GitHub. Si le téléchargement est lent, essayez de télécharger à un moment différent ou utilisez un gestionnaire de téléchargement.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h4>Comment mettre à jour le launcher ?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Le launcher se met à jour automatiquement au lancement. Si une mise à jour est disponible, elle sera téléchargée et installée automatiquement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="src/img/valerium.png" alt="Valerium" class="footer-logo-img">
+                    <span>Valerium</span>
+                </div>
+                <div class="footer-links">
+                    <a href="home">Accueil</a>
+                    <a href="home#serveur">Serveur</a>
+                    <a href="home#regles">Règles</a>
+                    <a href="home#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Valerium. Tous droits réservés. | Serveur Minecraft PvP Faction Moddé</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="src/js/download.js"></script>
+</body>
+</html> 

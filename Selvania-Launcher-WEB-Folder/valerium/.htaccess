@@ -1,0 +1,9 @@
+RewriteEngine on
+# Activer les répertoires listables si pas d'index
+Options +Indexes
+
+# Dire à Apache d'utiliser index.php en priorité
+DirectoryIndex index.php index.html home.html
+
+# Pour que ton launcher MC lise correctement les JSON
+AddType application/json .json

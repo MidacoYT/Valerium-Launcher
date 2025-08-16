@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valerium - Serveur Minecraft PvP Faction Moddé</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="src/img/icon.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="src/img/valerium.png" alt="Valerium Logo" class="logo-img">
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#accueil" class="nav-link">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#serveur" class="nav-link">Serveur</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#regles" class="nav-link">Règles</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Hero -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <br>Serveur PvP Faction Moddé
+                </h1>
+                <p class="hero-subtitle">Rejoignez l'aventure Farm2Win dans un univers Minecraft moddé unique</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="downloadLauncher()">
+                        <i class="fas fa-download"></i>
+                        Télécharger le Launcher
+                    </button>
+                    <button class="btn btn-secondary" onclick="showInstructions()">
+                        <i class="fas fa-info-circle"></i>
+                        Instructions d'installation
+                    </button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="src/img/valerium.png" alt="Valerium" class="hero-logo">
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <span class="stat-number">150+</span>
+                <span class="stat-label">Joueurs</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">En ligne</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-shield-alt"></i>
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Sécurisé</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Serveur -->
+    <section id="serveur" class="server-section">
+        <div class="container">
+            <h2 class="section-title">À propos du serveur</h2>
+            <div class="server-grid">
+                <div class="server-card">
+                    <div class="card-icon">
+                        <i class="fas fa-sword"></i>
+                    </div>
+                    <h3>PvP Faction</h3>
+                    <p>Affrontez d'autres joueurs dans des batailles épiques entre factions. Construisez votre base, formez des alliances et dominez le serveur !</p>
+                </div>
+                <div class="server-card">
+                    <div class="card-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Farm2Win</h3>
+                    <p>Le farming est au cœur de notre gameplay. Cultivez, élevez et optimisez vos productions pour devenir le plus riche du serveur !</p>
+                </div>
+                <div class="server-card">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Moddé</h3>
+                    <p>Profitez d'une expérience enrichie avec nos mods sélectionnés. Nouvelles machines, items et mécaniques pour plus de fun !</p>
+                </div>
+                <div class="server-card">
+                    <div class="card-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Launcher Dédié</h3>
+                    <p>Notre launcher personnalisé vous permet de vous connecter facilement avec tous les mods pré-configurés et optimisés !</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Règles -->
+    <section id="regles" class="rules-section">
+        <div class="container">
+            <h2 class="section-title">Règles du serveur</h2>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-number">1</div>
+                    <h4>Respect mutuel</h4>
+                    <p>Soyez respectueux envers tous les joueurs. Aucune discrimination ou harcèlement ne sera toléré.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">2</div>
+                    <h4>Pas de triche</h4>
+                    <p>L'utilisation de mods non autorisés, hacks ou exploits est strictement interdite.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">3</div>
+                    <h4>PvP équitable</h4>
+                    <p>Les combats PvP sont autorisés, mais évitez le spawn killing et le griefing excessif.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">4</div>
+                    <h4>Construction</h4>
+                    <p>Construisez vos bases avec goût. Les constructions offensantes ou inappropriées seront supprimées.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">5</div>
+                    <h4>Communication</h4>
+                    <p>Utilisez le chat de manière appropriée. Pas de spam ou de langage inapproprié.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">6</div>
+                    <h4>Équipe</h4>
+                    <p>L'équipe se réserve le droit de modifier ces règles et de prendre des sanctions si nécessaire.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Contact -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Nous rejoindre</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Informations de connexion</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-download"></i>
+                        <div>
+                            <strong>Launcher:</strong>
+                            <span>Valerium Launcher</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-gamepad"></i>
+                        <div>
+                            <strong>Version:</strong>
+                            <span>1.7.10</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>Slots:</strong>
+                            <span>200 joueurs</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-desktop"></i>
+                        <div>
+                            <strong>Plateforme:</strong>
+                            <span>Windows, Mac, Linux</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <h3>Réseaux sociaux</h3>
+                    <div class="social-grid">
+                        <a href="#" class="social-link discord">
+                            <i class="fab fa-discord"></i>
+                            <span>Discord</span>
+                        </a>
+                        <a href="#" class="social-link youtube">
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                        </a>
+                        <a href="#" class="social-link twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="#" class="social-link instagram">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="src/img/valerium.png" alt="Valerium" class="footer-logo-img">
+                    <span>Valerium</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#accueil">Accueil</a>
+                    <a href="#serveur">Serveur</a>
+                    <a href="#regles">Règles</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Valerium. Tous droits réservés. | Serveur Minecraft PvP Faction Moddé</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="src/js/script.js"></script>
+</body>
+</html> 

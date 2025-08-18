@@ -7,138 +7,145 @@
 
 export default class Slider {
     constructor(id, minValue, maxValue) {
-        this.startX = 0;
-        this.x = 0;
-
+        console.log('Initialisation du Slider avec:', { id, minValue, maxValue });
+        
         this.slider = document.querySelector(id);
+        if (!this.slider) {
+            console.error('Slider element non trouvé pour:', id);
+            return;
+        }
+
         this.touchLeft = this.slider.querySelector('.slider-touch-left');
         this.touchRight = this.slider.querySelector('.slider-touch-right');
         this.lineSpan = this.slider.querySelector('.slider-line span');
 
-        this.min = parseFloat(this.slider.getAttribute('min'));
-        this.max = parseFloat(this.slider.getAttribute('max'));
-
-        if (!minValue) minValue = this.min;
-        if (!maxValue) maxValue = this.max;
-
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-
-        this.step = parseFloat(this.slider.getAttribute('step'));
-
-        this.normalizeFact = 18;
-
-        this.reset();
-
-        this.maxX = this.slider.offsetWidth - this.touchRight.offsetWidth;
-        this.selectedTouch = null;
-        this.initialValue = this.lineSpan.offsetWidth - this.normalizeFact;
-
-        this.setMinValue(this.minValue);
-        this.setMaxValue(this.maxValue);
-
-        this.touchLeft.addEventListener('mousedown', (event) => this.onStart(document.querySelector('.slider-touch-left'), event));
-        this.touchRight.addEventListener('mousedown', (event) => this.onStart(document.querySelector('.slider-touch-right'), event));
-        this.touchLeft.addEventListener('touchstart', (event) => this.onStart(document.querySelector('.slider-touch-left'), event));
-        this.touchRight.addEventListener('touchstart', (event) => this.onStart(document.querySelector('.slider-touch-right'), event));
-    }
-
-    reset() {
-        this.touchLeft.style.left = '0px';
-        this.touchRight.style.left = (this.slider.offsetWidth - this.touchLeft.offsetWidth) + 'px';
-        this.lineSpan.style.marginLeft = '0px';
-        this.lineSpan.style.width = (this.slider.offsetWidth - this.touchLeft.offsetWidth) + 'px';
-        this.startX = 0;
-        this.x = 0;
-    }
-
-    setMinValue(minValue) {
-        let ratio = (minValue - this.min) / (this.max - this.min);
-        this.touchLeft.style.left = Math.ceil(ratio * (this.slider.offsetWidth - (this.touchLeft.offsetWidth + this.normalizeFact))) + 'px';
-        this.lineSpan.style.marginLeft = this.touchLeft.offsetLeft + 'px';
-        this.lineSpan.style.width = (this.touchRight.offsetLeft - this.touchLeft.offsetLeft) + 'px';
-    }
-
-    setMaxValue(maxValue) {
-        var ratio = (maxValue - this.min) / (this.max - this.min);
-        this.touchRight.style.left = Math.ceil(ratio * (this.slider.offsetWidth - (this.touchLeft.offsetWidth + this.normalizeFact)) + this.normalizeFact) + 'px';
-        this.lineSpan.style.marginLeft = this.touchLeft.offsetLeft + 'px';
-        this.lineSpan.style.width = (this.touchRight.offsetLeft - this.touchLeft.offsetLeft) + 'px';
-    }
-
-    onStart(elem, event) {
-        event.preventDefault();
-
-        if (elem === this.touchLeft)
-            this.x = this.touchLeft.offsetLeft;
-        else
-            this.x = this.touchRight.offsetLeft;
-
-        this.startX = event.pageX - this.x;
-        this.selectedTouch = elem;
-
-        let self = this;
-        this.func1 = (event) => { this.onMove(event) };
-        this.func2 = (event) => { this.onStop(event) };
-
-        document.addEventListener('mousemove', this.func1);
-        document.addEventListener('mouseup', this.func2);
-        document.addEventListener('touchmove', this.func1);
-        document.addEventListener('touchend', this.func2);
-    }
-
-    onMove(event) {
-        this.x = event.pageX - this.startX;
-
-        if (this.selectedTouch === this.touchLeft) {
-            if (this.x > this.touchRight.offsetLeft - this.selectedTouch.offsetWidth - 24)
-                this.x = this.touchRight.offsetLeft - this.selectedTouch.offsetWidth - 24;
-            else if (this.x < 0)
-                this.x = 0;
-
-            this.selectedTouch.style.left = this.x + 'px';
-        } else if (this.selectedTouch === this.touchRight) {
-            if (this.x < this.touchLeft.offsetLeft + this.touchLeft.offsetWidth + 24) {
-                this.x = this.touchLeft.offsetLeft + this.touchLeft.offsetWidth + 24;
-            } else if (this.x > this.maxX)
-                this.x = this.maxX;
-
-            this.selectedTouch.style.left = this.x + 'px';
+        if (!this.touchLeft || !this.touchRight || !this.lineSpan) {
+            console.error('Éléments du slider manquants');
+            return;
         }
 
-        this.lineSpan.style.marginLeft = this.touchLeft.offsetLeft + 'px';
-        this.lineSpan.style.width = this.touchRight.offsetLeft - this.touchLeft.offsetLeft + 'px';
+        this.min = parseFloat(this.slider.getAttribute('min')) || 0.5;
+        this.max = parseFloat(this.slider.getAttribute('max')) || 8;
+        this.step = parseFloat(this.slider.getAttribute('step')) || 0.5;
 
-        this.calculateValue();
+        this.minValue = minValue || this.min;
+        this.maxValue = maxValue || this.max;
+
+        this.dragging = false;
+        this.currentHandle = null;
+
+        console.log('Valeurs du slider:', {
+            min: this.min,
+            max: this.max,
+            step: this.step,
+            minValue: this.minValue,
+            maxValue: this.maxValue
+        });
+
+        this.init();
     }
 
-    onStop(self, event) {
-        document.removeEventListener('mousemove', this.func1);
-        document.removeEventListener('mouseup', this.func2);
-        document.removeEventListener('touchmove', this.func1);
-        document.removeEventListener('touchend', this.func2);
-
-        this.selectedTouch = null;
-
-        this.calculateValue();
+    init() {
+        // Positionner les poignées initialement
+        this.updatePositions();
+        
+        // Ajouter les événements
+        this.touchLeft.addEventListener('mousedown', (e) => this.startDrag(e, 'left'));
+        this.touchRight.addEventListener('mousedown', (e) => this.startDrag(e, 'right'));
+        
+        // Événements globaux
+        document.addEventListener('mousemove', (e) => this.drag(e));
+        document.addEventListener('mouseup', () => this.stopDrag());
+        
+        console.log('Slider initialisé');
     }
 
-    calculateValue() {
-        let newValue = (this.lineSpan.offsetWidth - this.normalizeFact) / this.initialValue;
-        let minValue = this.lineSpan.offsetLeft / this.initialValue;
-        let maxValue = minValue + newValue;
+    updatePositions() {
+        const sliderWidth = this.slider.offsetWidth - 48;
+        const minRatio = (this.minValue - this.min) / (this.max - this.min);
+        const maxRatio = (this.maxValue - this.min) / (this.max - this.min);
 
-        minValue = minValue * (this.max - this.min) + this.min;
-        maxValue = maxValue * (this.max - this.min) + this.min;
+        const leftPos = minRatio * sliderWidth;
+        const rightPos = maxRatio * sliderWidth;
 
-        if (this.step != 0.0) {
-            let multi = Math.floor(minValue / this.step);
-            this.minValue = this.step * multi;
+        this.touchLeft.style.left = leftPos + 'px';
+        this.touchRight.style.left = rightPos + 'px';
+        this.updateLine();
+    }
 
-            multi = Math.floor(maxValue / this.step);
-            this.maxValue = this.step * multi;
+    startDrag(e, handle) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('Début drag:', handle);
+        
+        this.dragging = true;
+        this.currentHandle = handle;
+        this.startX = e.clientX;
+        this.startLeft = handle === 'left' ? 
+            parseInt(this.touchLeft.style.left) || 0 : 
+            parseInt(this.touchRight.style.left) || 0;
+    }
+
+    drag(e) {
+        if (!this.dragging || !this.currentHandle) return;
+
+        e.preventDefault();
+        
+        const deltaX = e.clientX - this.startX;
+        const newLeft = this.startLeft + deltaX;
+        const sliderWidth = this.slider.offsetWidth - 48;
+        
+        if (this.currentHandle === 'left') {
+            const rightPos = parseInt(this.touchRight.style.left) || 0;
+            const maxLeft = rightPos - 24;
+            const clampedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+            this.touchLeft.style.left = clampedLeft + 'px';
+        } else {
+            const leftPos = parseInt(this.touchLeft.style.left) || 0;
+            const minRight = leftPos + 24;
+            const clampedRight = Math.max(minRight, Math.min(newLeft, sliderWidth));
+            this.touchRight.style.left = clampedRight + 'px';
         }
+        
+        this.updateLine();
+        this.updateValues();
+    }
 
+    stopDrag() {
+        if (!this.dragging) return;
+        
+        console.log('Fin drag');
+        this.dragging = false;
+        this.currentHandle = null;
+    }
+
+    updateLine() {
+        const leftPos = parseInt(this.touchLeft.style.left) || 0;
+        const rightPos = parseInt(this.touchRight.style.left) || 0;
+        
+        this.lineSpan.style.marginLeft = leftPos + 'px';
+        this.lineSpan.style.width = (rightPos - leftPos) + 'px';
+    }
+
+    updateValues() {
+        const sliderWidth = this.slider.offsetWidth - 48;
+        const leftPos = parseInt(this.touchLeft.style.left) || 0;
+        const rightPos = parseInt(this.touchRight.style.left) || 0;
+        
+        const minRatio = leftPos / sliderWidth;
+        const maxRatio = rightPos / sliderWidth;
+        
+        this.minValue = this.min + (minRatio * (this.max - this.min));
+        this.maxValue = this.min + (maxRatio * (this.max - this.min));
+        
+        // Appliquer le step
+        if (this.step > 0) {
+            this.minValue = Math.round(this.minValue / this.step) * this.step;
+            this.maxValue = Math.round(this.maxValue / this.step) * this.step;
+        }
+        
+        console.log('Nouvelles valeurs:', { min: this.minValue, max: this.maxValue });
         this.emit('change', this.minValue, this.maxValue);
     }
 

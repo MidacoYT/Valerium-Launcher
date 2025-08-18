@@ -599,3 +599,63 @@
         width: 100%;
     }
 }
+
+/* Scrollbar personnalisée pour les news */
+.news-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.news-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.news-list::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.news-list::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-primary-hover);
+}
+
+/* Scrollbar personnalisée pour les réseaux sociaux */
+.social-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.social-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.social-list::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.social-list::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-primary-hover);
+}
+
+/* Scrollbar pour la liste des instances */
+.instances-List::-webkit-scrollbar {
+    width: 8px;
+}
+
+.instances-List::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+}
+
+.instances-List::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.instances-List::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-primary-hover);
+}

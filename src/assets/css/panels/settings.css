@@ -51,6 +51,8 @@
     height: 100%;
     padding: 0;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--element-color) transparent;
 }
 
 .container-settings.active-container-settings {
@@ -59,6 +61,52 @@
     z-index: 1;
     pointer-events: all;
     animation: settingsSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scrollbar personnalisée pour les conteneurs de paramètres */
+.container-settings::-webkit-scrollbar {
+    width: 8px;
+}
+
+.container-settings::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+}
+
+.container-settings::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 4px;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.container-settings::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-primary-hover);
+    transform: scale(1.1);
+}
+
+.container-settings::-webkit-scrollbar-thumb:active {
+    background: var(--element-color-hover);
+}
+
+/* Scrollbar pour la liste des comptes */
+.accounts-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.accounts-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.accounts-list::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.accounts-list::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-primary-hover);
 }
 
 .settings-elements-box {
@@ -191,40 +239,133 @@ input[type="file"]::-webkit-file-upload-button:hover {
 
 /* Slider moderne */
 .memory-slider {
+    position: relative;
     width: 100%;
-    height: 6px;
-    background: var(--background-secondary);
-    border-radius: 3px;
-    outline: none;
-    -webkit-appearance: none;
+    height: 40px;
+    background: var(--background-element);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
     margin: 1rem 0;
+    padding: 0.5rem;
+    cursor: pointer;
+    overflow: visible;
 }
 
-.memory-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
+.slider-touch-left,
+.slider-touch-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
     background: var(--gradient-primary);
     border-radius: 50%;
-    cursor: pointer;
+    cursor: grab;
     box-shadow: var(--shadow-md);
     transition: var(--transition);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: none;
 }
 
-.memory-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+.slider-touch-left:active,
+.slider-touch-right:active {
+    cursor: grabbing;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: var(--shadow-xl);
+}
+
+.slider-touch-left:hover,
+.slider-touch-right:hover {
+    transform: translateY(-50%) scale(1.2);
     box-shadow: var(--shadow-lg);
 }
 
-.memory-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: var(--gradient-primary);
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
+.slider-touch-left span,
+.slider-touch-right span {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--background-element);
+    color: var(--color);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--border-radius);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
     box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    opacity: 0;
+    transition: var(--transition);
+    pointer-events: none;
+    z-index: 20;
+}
+
+.slider-touch-left:hover span,
+.slider-touch-right:hover span,
+.slider-touch-left:active span,
+.slider-touch-right:active span {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.slider-line {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    background: var(--background-secondary);
+    border-radius: 3px;
+    width: 100%;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.slider-line span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: var(--transition);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    min-width: 0;
+    pointer-events: none;
+}
+
+/* Bloc d'information RAM */
+.ram-info-block {
+    background: var(--background-element);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.ram-info-block b {
+    color: var(--element-color);
+    font-weight: 600;
+}
+
+#total-ram,
+#free-ram {
+    color: var(--success-color);
+    font-weight: 700;
 }
 
 /* Thèmes */
@@ -366,6 +507,32 @@ input[type="file"]::-webkit-file-upload-button:hover {
 
 .delete-profile:hover {
     transform: scale(1.1);
+    box-shadow: var(--shadow-md);
+}
+
+/* Bouton de déconnexion */
+.logout-btn {
+    background: var(--gradient-secondary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    margin: 1rem 0;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: var(--gradient-accent);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
     box-shadow: var(--shadow-md);
 }
 

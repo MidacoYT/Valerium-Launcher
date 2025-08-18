@@ -165,6 +165,31 @@ async function setStatus(opt) {
     }
 }
 
+async function clearAllSessionData() {
+    try {
+        // Nettoyer localStorage et sessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Nettoyer les cookies
+        document.cookie.split(";").forEach(function(c) { 
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        
+        // Forcer le nettoyage du cache d'Electron
+        if (window.electronAPI) {
+            try {
+                await window.electronAPI.clearCache();
+            } catch (e) {
+                console.log('Impossible de nettoyer le cache Electron:', e);
+            }
+        }
+        
+        console.log('Toutes les données de session ont été nettoyées');
+    } catch (error) {
+        console.error('Erreur lors du nettoyage des données de session:', error);
+    }
+}
 
 export {
     appdata as appdata,
@@ -180,5 +205,6 @@ export {
     updateSidebarUserInfo as updateSidebarUserInfo,
     slider as Slider,
     pkg as pkg,
-    setStatus as setStatus
+    setStatus as setStatus,
+    clearAllSessionData as clearAllSessionData
 }

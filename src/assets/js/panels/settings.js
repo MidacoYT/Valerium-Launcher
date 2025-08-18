@@ -3,7 +3,7 @@
  * Luuxis License v1.0 (voir fichier LICENSE pour les détails en FR/EN)
  */
 
-import { changePanel, accountSelect, database, Slider, config, setStatus, popup, appdata, setBackground, updateSidebarUserInfo } from '../utils.js'
+import { changePanel, accountSelect, database, Slider, config, setStatus, popup, appdata, setBackground, updateSidebarUserInfo, clearAllSessionData } from '../utils.js'
 const { ipcRenderer } = require('electron');
 const os = require('os');
 
@@ -52,18 +52,25 @@ class Settings {
         document.querySelector('.accounts-list').addEventListener('click', async e => {
             let popupAccount = new popup()
             try {
-                let id = e.target.id
-                if (e.target.classList.contains('account')) {
+                // Gestion du bouton d'ajout de compte
+                if (e.target.id == 'add') {
                     popupAccount.openPopup({
                         title: 'Connexion',
                         content: 'Veuillez patienter...',
                         color: 'var(--color)'
                     })
+                    document.querySelector('.cancel-home').style.display = 'inline'
+                    return changePanel('login')
+                }
 
-                    if (id == 'add') {
-                        document.querySelector('.cancel-home').style.display = 'inline'
-                        return changePanel('login')
-                    }
+                // Gestion de la sélection d'un compte
+                if (e.target.classList.contains('account')) {
+                    let id = e.target.id
+                    popupAccount.openPopup({
+                        title: 'Connexion',
+                        content: 'Veuillez patienter...',
+                        color: 'var(--color)'
+                    })
 
                     let account = await this.db.readData('accounts', id);
                     let configClient = await this.setInstance(account);
@@ -72,17 +79,26 @@ class Settings {
                     return await this.db.updateData('configClient', configClient);
                 }
 
-                if (e.target.classList.contains("delete-profile")) {
+                // Gestion de la suppression d'un compte
+                if (e.target.classList.contains("delete-profile") || e.target.classList.contains("delete-profile-icon")) {
+                    // Trouver l'élément parent .account pour récupérer l'ID
+                    let accountElement = e.target.closest('.account');
+                    if (!accountElement) return;
+                    
+                    let id = accountElement.id;
+                    
                     popupAccount.openPopup({
-                        title: 'Connexion',
-                        content: 'Veuillez patienter...',
+                        title: 'Suppression du compte',
+                        content: 'Suppression en cours...',
                         color: 'var(--color)'
                     })
+                    
                     await this.db.deleteData('accounts', id);
-                    let deleteProfile = document.getElementById(`${id}`);
-                    let accountListElement = document.querySelector('.accounts-list');
-                    accountListElement.removeChild(deleteProfile);
+                    accountElement.remove();
 
+                    let accountListElement = document.querySelector('.accounts-list');
+                    
+                    // Si plus de comptes (seulement le bouton "Ajouter un compte" reste)
                     if (accountListElement.children.length == 1) {
                         // Plus de comptes, réinitialiser la sidebar
                         updateSidebarUserInfo(null);
@@ -91,21 +107,75 @@ class Settings {
 
                     let configClient = await this.db.readData('configClient');
 
+                    // Si le compte supprimé était le compte sélectionné
                     if (configClient.account_selected == id) {
                         let allAccounts = await this.db.readAllData('accounts');
-                        configClient.account_selected = allAccounts[0].ID
-                        accountSelect(allAccounts[0]);
-                        let newInstanceSelect = await this.setInstance(allAccounts[0]);
-                        configClient.instance_selct = newInstanceSelect.instance_selct
-                        return await this.db.updateData('configClient', configClient);
+                        if (allAccounts.length > 0) {
+                            configClient.account_selected = allAccounts[0].ID
+                            accountSelect(allAccounts[0]);
+                            let newInstanceSelect = await this.setInstance(allAccounts[0]);
+                            configClient.instance_selct = newInstanceSelect.instance_selct
+                            await this.db.updateData('configClient', configClient);
+                        } else {
+                            // Aucun compte restant
+                            configClient.account_selected = null;
+                            configClient.instance_selct = null;
+                            await this.db.updateData('configClient', configClient);
+                            updateSidebarUserInfo(null);
+                            changePanel('login');
+                        }
                     }
                 }
             } catch (err) {
-                console.error(err)
+                console.error('Erreur dans la gestion des comptes:', err)
             } finally {
                 popupAccount.closePopup();
             }
         })
+
+        // Fonction de déconnexion
+        document.querySelector('.logout-btn').addEventListener('click', async () => {
+            let popupLogout = new popup();
+            popupLogout.openPopup({
+                title: 'Déconnexion',
+                content: 'Déconnexion en cours...',
+                color: 'var(--color)'
+            });
+
+            try {
+                // Supprimer tous les comptes
+                let allAccounts = await this.db.readAllData('accounts');
+                for (let account of allAccounts) {
+                    await this.db.deleteData('accounts', account.ID);
+                }
+
+                // Réinitialiser la configuration
+                let configClient = await this.db.readData('configClient');
+                configClient.account_selected = null;
+                configClient.instance_selct = null;
+                await this.db.updateData('configClient', configClient);
+
+                // Vider la liste des comptes
+                let accountListElement = document.querySelector('.accounts-list');
+                let addAccountElement = accountListElement.querySelector('#add');
+                accountListElement.innerHTML = '';
+                accountListElement.appendChild(addAccountElement);
+
+                // Réinitialiser la sidebar
+                updateSidebarUserInfo(null);
+
+                // Nettoyer toutes les données de session
+                await clearAllSessionData();
+
+                popupLogout.closePopup();
+                
+                // Rediriger vers la page de connexion
+                changePanel('login');
+            } catch (error) {
+                console.error('Erreur lors de la déconnexion:', error);
+                popupLogout.closePopup();
+            }
+        });
     }
 
     async setInstance(auth) {
@@ -137,34 +207,60 @@ class Settings {
         document.getElementById("free-ram").textContent = `${freeMem} Go`;
 
         let sliderDiv = document.querySelector(".memory-slider");
-        sliderDiv.setAttribute("max", Math.trunc((80 * totalMem) / 100));
+        let maxRam = Math.trunc((80 * totalMem) / 100);
+        sliderDiv.setAttribute("max", maxRam);
 
         let ram = config?.java_config?.java_memory ? {
             ramMin: config.java_config.java_memory.min,
             ramMax: config.java_config.java_memory.max
-        } : { ramMin: "1", ramMax: "2" };
+        } : { ramMin: 1, ramMax: 2 };
 
-        if (totalMem < ram.ramMin) {
-            config.java_config.java_memory = { min: 1, max: 2 };
+        // Validation des valeurs
+        if (totalMem < ram.ramMin || ram.ramMin < 0.5) {
+            ram.ramMin = 1;
+        }
+        if (ram.ramMax > maxRam || ram.ramMax <= ram.ramMin) {
+            ram.ramMax = Math.min(maxRam, Math.max(2, ram.ramMin + 1));
+        }
+
+        // Mettre à jour la config si nécessaire
+        if (config?.java_config?.java_memory?.min !== ram.ramMin || 
+            config?.java_config?.java_memory?.max !== ram.ramMax) {
+            config.java_config.java_memory = { min: ram.ramMin, max: ram.ramMax };
             this.db.updateData('configClient', config);
-            ram = { ramMin: "1", ramMax: "2" }
-        };
+        }
 
-        let slider = new Slider(".memory-slider", parseFloat(ram.ramMin), parseFloat(ram.ramMax));
+        console.log('Initialisation du slider RAM:', { ram, maxRam, totalMem });
 
-        let minSpan = document.querySelector(".slider-touch-left span");
-        let maxSpan = document.querySelector(".slider-touch-right span");
+        // Initialiser le slider
+        setTimeout(() => {
+            try {
+                let slider = new Slider(".memory-slider", ram.ramMin, ram.ramMax);
+                console.log('Slider créé avec succès');
 
-        minSpan.setAttribute("value", `${ram.ramMin} Go`);
-        maxSpan.setAttribute("value", `${ram.ramMax} Go`);
+                let minSpan = document.querySelector(".slider-touch-left span");
+                let maxSpan = document.querySelector(".slider-touch-right span");
 
-        slider.on("change", async (min, max) => {
-            let config = await this.db.readData('configClient');
-            minSpan.setAttribute("value", `${min} Go`);
-            maxSpan.setAttribute("value", `${max} Go`);
-            config.java_config.java_memory = { min: min, max: max };
-            this.db.updateData('configClient', config);
-        });
+                if (minSpan && maxSpan) {
+                    minSpan.textContent = `${ram.ramMin} Go`;
+                    maxSpan.textContent = `${ram.ramMax} Go`;
+
+                    slider.on("change", async (min, max) => {
+                        console.log('Slider change:', { min, max });
+                        let config = await this.db.readData('configClient');
+                        minSpan.textContent = `${min} Go`;
+                        maxSpan.textContent = `${max} Go`;
+                        config.java_config.java_memory = { min: min, max: max };
+                        this.db.updateData('configClient', config);
+                    });
+                } else {
+                    console.error('Éléments span non trouvés');
+                }
+
+            } catch (error) {
+                console.error('Erreur lors de l\'initialisation du slider:', error);
+            }
+        }, 100);
     }
 
     async javaPath() {

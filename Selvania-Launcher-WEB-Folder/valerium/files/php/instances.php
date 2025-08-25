@@ -7,16 +7,16 @@ $instance['valerium'] = array_merge($instance['valerium'], array(
     ),
     "verify" => true,
     "ignored" => array(
-        options.txt,
-        optionsof.txt,
-        resourcepacks,
-        saves,
-        screenshots,
-        shaderpacks
+        "options.txt",
+        "optionsof.txt",
+        "resourcepacks",
+        "saves",
+        "screenshots",
+        "shaderpacks"
     ),
     "whitelist" => array(
-        MidacoYT,
-        Astrolith
+        "MidacoYT",
+        "Astrolith"
     ),
     "whitelistActive" => true,
     "status" => array(

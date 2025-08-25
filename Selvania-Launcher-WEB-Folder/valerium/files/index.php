@@ -31,5 +31,14 @@ if ($instance_param == 'null') {
     exit;
 }
 
+// Si une instance spécifique est demandée, afficher ses métadonnées
+if ($instance_param == 'valerium') {
+    $instance = array();
+    $instance['valerium'] = array("name" => "valerium", "url" => "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?instance=valerium");
+    include 'php/instances.php';
+    echo str_replace("\\", "", json_encode($instance['valerium']));
+    exit;
+}
+
 echo dirToArray("instances/$instance_param");
 ?>

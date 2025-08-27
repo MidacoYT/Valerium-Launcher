@@ -15,8 +15,7 @@ $instance['valerium'] = array_merge($instance['valerium'], array(
         "shaderpacks"
     ),
     "whitelist" => array(
-        "MidacoYT",
-        "Astrolith"
+
     ),
     "whitelistActive" => true,
     "status" => array(

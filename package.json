@@ -1,7 +1,7 @@
 {
     "name": "Valerium-Launcher",
     "preductname": "Valerium Launcher",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "description": "Launcher Mincraft pour le serveur Valerium",
     "main": "src/app.js",
     "author": {
@@ -11,7 +11,7 @@
     },
     "url": "https://cdn.valerium.fr",
     "scripts": {
-        "start": "cross-env-shell NODE_ENV=dev electron .",
+        "start": "cross-env-shell electron .",
         "dev": "cross-env-shell DEV_TOOL=open nodemon --exec npm start",
         "build": "node build.js --obf=true --build=platform",
         "icon": "node build.js --icon=https://raw.githubusercontent.com/MidacoYT/ValeriumLauncher/master/app/assets/images/icon.png"

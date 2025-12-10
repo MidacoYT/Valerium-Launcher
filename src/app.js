@@ -12,6 +12,8 @@ const fs = require('fs');
 
 const UpdateWindow = require("./assets/js/windows/updateWindow.js");
 const MainWindow = require("./assets/js/windows/mainWindow.js");
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+app.userAgentFallback = userAgent;
 
 let dev = process.env.NODE_ENV === 'dev';
 

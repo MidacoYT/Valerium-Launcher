@@ -1,9 +1,10 @@
 /**
  * @author Luuxis
- * Luuxis License v1.0 (voir fichier LICENSE pour les détails en FR/EN)
+ * Luuxis License v1.0
  */
 
-const { app, ipcMain, nativeTheme } = require('electron');
+// 1. AJOUT DE 'session' ICI
+const { app, ipcMain, nativeTheme, session } = require('electron');
 const { Microsoft } = require('minecraft-java-core');
 const { autoUpdater } = require('electron-updater')
 
@@ -12,28 +13,39 @@ const fs = require('fs');
 
 const UpdateWindow = require("./assets/js/windows/updateWindow.js");
 const MainWindow = require("./assets/js/windows/mainWindow.js");
-const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
-app.userAgentFallback = userAgent;
+
+// 2. SUPPRESSION DES LIGNES userAgentFallback QUI CASSAIENT LE SPLASH
+// const userAgent = "...";  <-- SUPPRIMÉ
+// app.userAgentFallback = userAgent; <-- SUPPRIMÉ
 
 let dev = process.env.NODE_ENV === 'dev';
 
 if (dev) {
-    // Utiliser LocalAppData pour les données du launcher (plus approprié que ./data)
     let appPath = path.resolve(app.getPath('userData')).replace(/\\/g, '/');
-    // Utiliser le vrai dossier AppData du système même en mode développement
     let appdata = app.getPath('appData');
     if (!fs.existsSync(appPath)) fs.mkdirSync(appPath, { recursive: true });
     if (!fs.existsSync(appdata)) fs.mkdirSync(appdata, { recursive: true });
-    // Ne pas redéfinir userData pour utiliser le chemin système par défaut (LocalAppData)
-    // Ne pas redéfinir appData pour utiliser le chemin système par défaut
 }
 
 if (!app.requestSingleInstanceLock()) app.quit();
 else app.whenReady().then(() => {
-    if (dev) return MainWindow.createWindow()
+
+    // 3. AJOUT DU CORRECTIF MICROSOFT ICI (INTERCEPTION RÉSEAU)
+    // Cela fait croire à Microsoft qu'on est Chrome, UNIQUEMENT pour les requêtes web
+    session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+        details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+        callback({ cancel: false, requestHeaders: details.requestHeaders });
+    });
+
+    // Code de lancement
+    if (dev) {
+        // Tu peux décommenter la ligne suivante si tu veux sauter le splash en dev
+        // return MainWindow.createWindow() 
+    }
     UpdateWindow.createWindow()
 });
 
+// ... Le reste du code ne change pas ...
 ipcMain.on('main-window-open', () => MainWindow.createWindow())
 ipcMain.on('main-window-dev-tools', () => MainWindow.getWindow().webContents.openDevTools({ mode: 'detach' }))
 ipcMain.on('main-window-dev-tools-close', () => MainWindow.getWindow().webContents.closeDevTools())
@@ -106,6 +118,13 @@ app.on('window-all-closed', () => app.quit());
 autoUpdater.autoDownload = false;
 
 ipcMain.handle('update-app', async () => {
+    // PETIT FIX POUR LE DEV (OPTIONNEL)
+    // Si tu es en dev, on simule qu'il n'y a pas de maj pour débloquer le splash
+    if (dev) {
+         return { error: true, message: "Dev Mode" }; 
+         // Le splash recevra une erreur et lancera le launcher grâce à ta modif précédente
+    }
+
     return await new Promise(async (resolve, reject) => {
         autoUpdater.checkForUpdates().then(res => {
             resolve(res);

@@ -5,7 +5,8 @@
 const { AZauth, Mojang } = require('minecraft-java-core');
 const { ipcRenderer } = require('electron');
 
-import { popup, database, changePanel, accountSelect, addAccount, config, setStatus } from '../utils.js';
+// AJOUT DE 'updateSidebarUserInfo' DANS LES IMPORTS
+import { popup, database, changePanel, accountSelect, addAccount, config, setStatus, updateSidebarUserInfo } from '../utils.js';
 
 class Login {
     static id = "login";
@@ -192,12 +193,19 @@ class Login {
     }
 
     async saveData(connectionData) {
-        let configClient = await this.db.readData('configClient');
+        console.log("Sauvegarde du compte en cours...", connectionData);
+        
+        // 1. Créer le compte dans la base de données
         let account = await this.db.createData('accounts', connectionData)
-        let instanceSelect = configClient.instance_selct
-        let instancesList = await config.getInstanceList()
+        
+        // 2. Mettre à jour la configuration client pour sélectionner ce compte
+        let configClient = await this.db.readData('configClient');
         configClient.account_selected = account.ID;
 
+        // 3. Gestion de l'instance et de la whitelist
+        let instanceSelect = configClient.instance_selct
+        let instancesList = await config.getInstanceList()
+        
         for (let instance of instancesList) {
             if (instance.whitelistActive) {
                 let whitelist = instance.whitelist.find(whitelist => whitelist == account.name)
@@ -211,9 +219,15 @@ class Login {
             }
         }
 
+        // 4. Sauvegarder la config client
         await this.db.updateData('configClient', configClient);
-        await addAccount(account);
-        await accountSelect(account);
+        
+        // 5. Mises à jour de l'interface (UI)
+        await addAccount(account);           // Ajoute à la liste
+        await accountSelect(account);        // Sélectionne visuellement dans la liste
+        updateSidebarUserInfo(account);      // <--- IMPORTANT : Met à jour la sidebar (Tête + Nom)
+        
+        // 6. Changement de panel
         changePanel('home');
     }
 }

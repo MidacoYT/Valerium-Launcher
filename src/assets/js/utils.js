@@ -34,15 +34,23 @@ async function setBackground(theme) {
         let Background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
         background = `linear-gradient(#00000080, #00000080), url(./assets/images/background/${theme ? 'dark' : 'light'}/${Background})`;
     }
-    body.style.backgroundImage = background ? background : theme ? '#000' : '#fff';
-    body.style.backgroundSize = 'cover';
+    if (background) {
+        body.style.backgroundImage = background;
+        body.style.backgroundSize = 'cover';
+        body.style.backgroundColor = '';
+    } else {
+        // Aucun asset d'arrière-plan trouvé: utilise une couleur unie fiable
+        body.style.backgroundImage = 'none';
+        body.style.backgroundColor = theme ? '#000' : '#fff';
+        body.style.backgroundSize = '';
+    }
 }
 
 async function changePanel(id) {
     let panel = document.querySelector(`.${id}`);
     let active = document.querySelector(`.active`)
     if (active) active.classList.toggle("active");
-    panel.classList.add("active");
+    if (panel) panel.classList.add("active");
     
     // Gérer l'affichage de la sidebar
     if (window.toggleSidebarVisibility) {
@@ -65,6 +73,9 @@ async function addAccount(data) {
         }
     }
     
+    let accountsList = document.querySelector('.accounts-list');
+    if(!accountsList) return; // Sécurité si la liste n'existe pas
+
     let div = document.createElement("div");
     div.classList.add("account");
     div.id = data.ID;
@@ -78,7 +89,7 @@ async function addAccount(data) {
             <div class="icon-account-delete delete-profile-icon"></div>
         </div>
     `
-    return document.querySelector('.accounts-list').appendChild(div);
+    return accountsList.appendChild(div);
 }
 
 async function accountSelect(data) {
@@ -86,7 +97,8 @@ async function accountSelect(data) {
     let activeAccount = document.querySelector('.account-select')
 
     if (activeAccount) activeAccount.classList.toggle('account-select');
-    account.classList.add('account-select');
+    if (account) account.classList.add('account-select');
+    
     if (data?.profile?.skins[0]?.base64) headplayer(data.profile.skins[0].base64);
     
     // Mise à jour des informations dans la sidebar
@@ -119,49 +131,69 @@ async function updateSidebarUserInfo(data) {
                 playerHead.style.backgroundImage = `url(${skin})`;
             } catch (error) {
                 console.error('Erreur lors de la mise à jour du skin dans la sidebar:', error);
-                // Garder l'image par défaut
-                playerHead.style.backgroundImage = `url('assets/images/default/setve.png')`;
+                playerHead.style.backgroundImage = `url('../images/default/setve.png')`;
             }
         } else {
-            // Réinitialiser à l'image par défaut si pas de skin
-            playerHead.style.backgroundImage = `url('assets/images/default/setve.png')`;
+            playerHead.style.backgroundImage = `url('../images/default/setve.png')`;
         }
     }
 }
 
 async function headplayer(skinBase64) {
-    let skin = await new skin2D().creatHeadTexture(skinBase64);
-    document.querySelector(".player-head").style.backgroundImage = `url(${skin})`;
+    let headElement = document.querySelector(".player-head");
+    if(!headElement) return;
+
+    try {
+        let skin = await new skin2D().creatHeadTexture(skinBase64);
+        headElement.style.backgroundImage = `url(${skin})`;
+    } catch(err) {
+        console.error(err);
+    }
 }
 
+// --- FONCTION CORRIGÉE POUR LE NOUVEAU DESIGN ---
 async function setStatus(opt) {
-    let nameServerElement = document.querySelector('.server-status-name')
-    let statusServerElement = document.querySelector('.server-status-text')
-    let playersOnline = document.querySelector('.status-player-count .player-count')
+    // Sélection des nouveaux éléments HTML (Glassmorphism design)
+    let statusDot = document.querySelector('.status-dot');
+    let countVal = document.querySelector('.count-val');
+    let serverName = document.querySelector('.server-name');
 
+    // Sécurité : Si les éléments n'existent pas (ex: on n'est pas sur Home), on arrête.
+    if (!statusDot || !countVal) return;
+
+    // État par défaut (Pas d'info ou Offline)
     if (!opt) {
-        statusServerElement.classList.add('red')
-        statusServerElement.innerHTML = `Ferme - 0 ms`
-        document.querySelector('.status-player-count').classList.add('red')
-        playersOnline.innerHTML = '0'
-        return
+        statusDot.classList.remove('online');
+        countVal.innerHTML = '0';
+        if(serverName) serverName.innerHTML = 'Hors Ligne';
+        return;
     }
 
-    let { ip, port, nameServer } = opt
-    nameServerElement.innerHTML = nameServer
-    let status = new Status(ip, port);
-    let statusServer = await status.getStatus().then(res => res).catch(err => err);
+    let { ip, port, nameServer } = opt;
+    
+    // Mise à jour du nom si disponible
+    if(serverName && nameServer) serverName.innerHTML = nameServer;
 
-    if (!statusServer.error) {
-        statusServerElement.classList.remove('red')
-        document.querySelector('.status-player-count').classList.remove('red')
-        statusServerElement.innerHTML = `En ligne - ${statusServer.ms} ms`
-        playersOnline.innerHTML = statusServer.playersConnect
-    } else {
-        statusServerElement.classList.add('red')
-        statusServerElement.innerHTML = `Ferme - 0 ms`
-        document.querySelector('.status-player-count').classList.add('red')
-        playersOnline.innerHTML = '0'
+    try {
+        let status = new Status(ip, port);
+        let statusServer = await status.getStatus();
+
+        if (!statusServer.error) {
+            // Serveur EN LIGNE
+            statusDot.classList.add('online');
+            // Gère playersConnect ou players.online selon la version de la lib
+            let players = statusServer.playersConnect || (statusServer.players ? statusServer.players.online : 0);
+            countVal.innerHTML = players;
+        } else {
+            // Serveur HORS LIGNE (Erreur ping)
+            statusDot.classList.remove('online');
+            countVal.innerHTML = '0';
+        }
+    } catch (err) {
+        // En cas d'erreur critique
+        statusDot.classList.remove('online');
+        countVal.innerHTML = '0';
+        console.error("Erreur Ping Serveur:", err);
     }
 }
 

@@ -7,6 +7,7 @@ import Login from './panels/login.js';
 import Home from './panels/home.js';
 import Settings from './panels/settings.js';
 
+
 // import modules
 import { logger, config, changePanel, database, popup, setBackground, accountSelect, addAccount, updateSidebarUserInfo, pkg } from './utils.js';
 const { AZauth, Microsoft, Mojang } = require('minecraft-java-core');
@@ -132,6 +133,12 @@ class Launcher {
         const navItems = document.querySelectorAll('.sidebar .nav-settings-btn');
         
         navItems.forEach(item => {
+            // Préparer un libellé pour les tooltips (mode rétracté)
+            const labelText = item.querySelector('span')?.textContent?.trim() || item.getAttribute('data-panel') || '';
+            if (labelText) {
+                item.setAttribute('data-label', labelText);
+                item.setAttribute('title', labelText);
+            }
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 
@@ -150,6 +157,7 @@ class Launcher {
         // Gestion du bouton settings dans la sidebar
         const sidebarSettingsBtn = document.querySelector('.sidebar-settings-btn');
         if (sidebarSettingsBtn) {
+            sidebarSettingsBtn.setAttribute('title', 'Paramètres');
             sidebarSettingsBtn.addEventListener('click', () => {
                 // Changer vers le panel settings
                 changePanel('settings');
@@ -251,6 +259,54 @@ class Launcher {
                     intelEnabledMac: true
                 }
             })
+        } else {
+            // Backfill/migration: compléter les champs manquants dans un config existant
+            configClient.java_config ??= { java_path: null, java_memory: { min: 2, max: 4 } };
+            configClient.java_config.java_memory ??= { min: 2, max: 4 };
+            if (typeof configClient.java_config.java_path === 'undefined') configClient.java_config.java_path = null;
+
+            configClient.game_config ??= { screen_size: { width: 854, height: 480 } };
+            configClient.game_config.screen_size ??= { width: 854, height: 480 };
+            if (typeof configClient.game_config.screen_size.width === 'undefined') configClient.game_config.screen_size.width = 854;
+            if (typeof configClient.game_config.screen_size.height === 'undefined') configClient.game_config.screen_size.height = 480;
+
+            configClient.launcher_config ??= { download_multi: 5, theme: 'auto', closeLauncher: 'close-launcher', intelEnabledMac: true };
+            if (typeof configClient.launcher_config.download_multi === 'undefined') configClient.launcher_config.download_multi = 5;
+            if (typeof configClient.launcher_config.theme === 'undefined') configClient.launcher_config.theme = 'auto';
+            if (typeof configClient.launcher_config.closeLauncher === 'undefined') configClient.launcher_config.closeLauncher = 'close-launcher';
+            if (typeof configClient.launcher_config.intelEnabledMac === 'undefined') configClient.launcher_config.intelEnabledMac = true;
+
+            // Normalisations et clamps supplémentaires
+            // RAM: s'assurer que ce sont des nombres dans des bornes raisonnables
+            let mem = configClient.java_config.java_memory;
+            mem.min = parseInt(mem.min, 10);
+            mem.max = parseInt(mem.max, 10);
+            if (Number.isNaN(mem.min)) mem.min = 2;
+            if (Number.isNaN(mem.max)) mem.max = 4;
+            // Borne raisonnable (1..64 Go) pour éviter des valeurs corrompues
+            mem.min = Math.max(1, Math.min(64, mem.min));
+            mem.max = Math.max(1, Math.min(64, mem.max));
+            if (mem.max < mem.min) mem.max = mem.min;
+            configClient.java_config.java_memory = mem;
+
+            // Résolution: nombres et limites de sécurité
+            let scr = configClient.game_config.screen_size;
+            scr.width = parseInt(scr.width, 10);
+            scr.height = parseInt(scr.height, 10);
+            if (Number.isNaN(scr.width)) scr.width = 854;
+            if (Number.isNaN(scr.height)) scr.height = 480;
+            // clamp 320..7680 width, 240..4320 height
+            scr.width = Math.max(320, Math.min(7680, scr.width));
+            scr.height = Math.max(240, Math.min(4320, scr.height));
+            configClient.game_config.screen_size = scr;
+
+            // Téléchargements parallèles: entier 1..16
+            let dm = parseInt(configClient.launcher_config.download_multi, 10);
+            if (Number.isNaN(dm)) dm = 5;
+            dm = Math.max(1, Math.min(16, dm));
+            configClient.launcher_config.download_multi = dm;
+
+            await this.db.updateData('configClient', configClient);
         }
     }
 
@@ -273,6 +329,23 @@ class Launcher {
         let popupRefresh = new popup();
 
         if (accounts?.length) {
+            // S'il y a des comptes, on cherche celui sélectionné
+            let activeAccount = accounts.find(acc => acc.ID === account_selected);
+            
+            // Si on ne trouve pas le compte sélectionné, on prend le premier
+            if (!activeAccount) {
+                activeAccount = accounts[0];
+                if (configClient) {
+                    configClient.account_selected = activeAccount.ID;
+                    await this.db.updateData('configClient', configClient);
+                }
+            }
+
+            // --- CORRECTION : Mise à jour de la Sidebar au démarrage ---
+            console.log("Compte actif trouvé :", activeAccount.name);
+            updateSidebarUserInfo(activeAccount);
+            // -----------------------------------------------------------
+
             for (let account of accounts) {
                 let account_ID = account.ID
                 if (account.error) {
@@ -372,31 +445,13 @@ class Launcher {
                 }
             }
 
-            accounts = await this.db.readAllData('accounts')
-            configClient = await this.db.readData('configClient')
-            account_selected = configClient ? configClient.account_selected : null
-
-            if (!account_selected) {
-                let uuid = accounts[0].ID
-                if (uuid) {
-                    configClient.account_selected = uuid
-                    await this.db.updateData('configClient', configClient)
-                    accountSelect(accounts[0])
-                }
-            }
-
-            if (!accounts.length) {
-                config.account_selected = null
-                await this.db.updateData('configClient', config);
-                // Réinitialiser la sidebar
-                updateSidebarUserInfo(null);
-                popupRefresh.closePopup()
-                return changePanel("login");
-            }
-
+            // À la fin de la fonction, avant le changePanel('home')
             popupRefresh.closePopup()
             changePanel("home");
+            
         } else {
+            // Si aucun compte
+            updateSidebarUserInfo(null); // On vide la sidebar
             popupRefresh.closePopup()
             changePanel('login');
         }

@@ -1,13 +1,13 @@
 {
     "name": "Valerium-Launcher",
     "preductname": "Valerium Launcher",
-    "version": "2.1.4",
+    "version": "2.2.0",
     "description": "Launcher Mincraft pour le serveur Valerium",
     "main": "src/app.js",
     "author": {
         "name": "luuxis, MidacoYT, Inc.",
         "email": "contact@luuxis.fr",
-        "url": "https://github.com/luuxis"  
+        "url": "https://github.com/MidacoYT"
     },
     "url": "https://cdn.valerium.fr",
     "scripts": {
@@ -22,6 +22,7 @@
         "ignore": "**/test"
     },
     "dependencies": {
+        "adm-zip": "^0.5.16",
         "electron-updater": "^6.1.8",
         "minecraft-java-core": "^4.1.4",
         "node-bdd": "^2.0.4",

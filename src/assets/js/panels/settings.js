@@ -223,12 +223,22 @@ class Settings {
             ram.ramMax = Math.min(maxRam, Math.max(2, ram.ramMin + 1));
         }
 
-        // Mettre à jour la config si nécessaire
+        if (!config) config = {};
+        
+        // Ensure java_config object exists before trying to access java_memory
+        if (!config.java_config) {
+            config.java_config = {};
+        }
+
+        // Now safe to compare and assign
         if (config?.java_config?.java_memory?.min !== ram.ramMin || 
             config?.java_config?.java_memory?.max !== ram.ramMax) {
+            
+            // This line caused the error because java_config was undefined
             config.java_config.java_memory = { min: ram.ramMin, max: ram.ramMax };
+            
             this.db.updateData('configClient', config);
-        }
+        }        
 
         console.log('Initialisation du slider RAM:', { ram, maxRam, totalMem });
 
@@ -265,7 +275,11 @@ class Settings {
 
     async javaPath() {
         let javaPathText = document.querySelector(".java-path-txt")
-        javaPathText.textContent = `${await appdata()}/${process.platform == 'darwin' ? this.config.dataDirectory : `.${this.config.dataDirectory}`}`;
+        // Avoid %appdata%/.undefined by defaulting to 'valerium' and prefixing with a dot on Win/Linux
+        const dataDirName = process.platform == 'darwin'
+            ? (this.config.dataDirectory || 'valerium')
+            : `.${(this.config.dataDirectory || 'valerium')}`;
+        javaPathText.textContent = `${await appdata()}/${dataDirName}`;
 
         let configClient = await this.db.readData('configClient')
         let javaPath = configClient?.java_config?.java_path || 'Utiliser la version de java livre avec le launcher';
@@ -275,21 +289,22 @@ class Settings {
 
         document.querySelector(".java-path-set").addEventListener("click", async () => {
             javaPathInputFile.value = '';
+            // Utiliser un listener 'change' une seule fois pour gérer l'annulation proprement
+            const onChange = async () => {
+                javaPathInputFile.removeEventListener('change', onChange);
+                if (!javaPathInputFile.files || javaPathInputFile.files.length === 0) return; // annulé
+                const filePath = javaPathInputFile.files[0].path || '';
+                const lower = filePath.replace(/\\/g, '/').toLowerCase();
+                const base = lower.endsWith('.exe') ? lower.slice(0, -4) : lower;
+                if (base.endsWith('/java') || base.endsWith('/javaw')) {
+                    let configClient = await this.db.readData('configClient')
+                    javaPathInputTxt.value = filePath;
+                    configClient.java_config.java_path = filePath
+                    await this.db.updateData('configClient', configClient);
+                } else alert("Le nom du fichier doit être java ou javaw");
+            };
+            javaPathInputFile.addEventListener('change', onChange, { once: true });
             javaPathInputFile.click();
-            await new Promise((resolve) => {
-                let interval;
-                interval = setInterval(() => {
-                    if (javaPathInputFile.value != '') resolve(clearInterval(interval));
-                }, 100);
-            });
-
-            if (javaPathInputFile.value.replace(".exe", '').endsWith("java") || javaPathInputFile.value.replace(".exe", '').endsWith("javaw")) {
-                let configClient = await this.db.readData('configClient')
-                let file = javaPathInputFile.files[0].path;
-                javaPathInputTxt.value = file;
-                configClient.java_config.java_path = file
-                await this.db.updateData('configClient', configClient);
-            } else alert("Le nom du fichier doit être java ou javaw");
         });
 
         document.querySelector(".java-path-reset").addEventListener("click", async () => {
@@ -313,21 +328,29 @@ class Settings {
 
         width.addEventListener("change", async () => {
             let configClient = await this.db.readData('configClient')
-            configClient.game_config.screen_size.width = width.value;
+            let val = parseInt(width.value, 10);
+            if (Number.isNaN(val)) val = 854;
+            val = Math.max(320, Math.min(7680, val));
+            width.value = val;
+            configClient.game_config.screen_size.width = val;
             await this.db.updateData('configClient', configClient);
         })
 
         height.addEventListener("change", async () => {
             let configClient = await this.db.readData('configClient')
-            configClient.game_config.screen_size.height = height.value;
+            let val = parseInt(height.value, 10);
+            if (Number.isNaN(val)) val = 480;
+            val = Math.max(240, Math.min(4320, val));
+            height.value = val;
+            configClient.game_config.screen_size.height = val;
             await this.db.updateData('configClient', configClient);
         })
 
         resolutionReset.addEventListener("click", async () => {
             let configClient = await this.db.readData('configClient')
-            configClient.game_config.screen_size = { width: '854', height: '480' };
-            width.value = '854';
-            height.value = '480';
+            configClient.game_config.screen_size = { width: 854, height: 480 };
+            width.value = 854;
+            height.value = 480;
             await this.db.updateData('configClient', configClient);
         })
     }
@@ -342,7 +365,11 @@ class Settings {
 
         maxDownloadFilesInput.addEventListener("change", async () => {
             let configClient = await this.db.readData('configClient')
-            configClient.launcher_config.download_multi = maxDownloadFilesInput.value;
+            let val = parseInt(maxDownloadFilesInput.value, 10);
+            if (Number.isNaN(val)) val = 5;
+            val = Math.max(1, Math.min(16, val));
+            maxDownloadFilesInput.value = val;
+            configClient.launcher_config.download_multi = val;
             await this.db.updateData('configClient', configClient);
         })
 

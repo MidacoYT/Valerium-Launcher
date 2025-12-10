@@ -7,7 +7,8 @@ const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
 const os = require("os");
 const pkg = require("../../../../package.json");
-let dev = process.env.DEV_TOOL === 'open';
+// Ne jamais ouvrir automatiquement les DevTools (même en dev)
+const openDevToolsOnStart = false;
 let mainWindow = undefined;
 
 function getWindow() {
@@ -42,7 +43,8 @@ function createWindow() {
     mainWindow.loadFile(path.join(`${app.getAppPath()}/src/launcher.html`));
     mainWindow.once('ready-to-show', () => {
         if (mainWindow) {
-            if (dev) mainWindow.webContents.openDevTools({ mode: 'detach' })
+            // DevTools ne s'ouvrent jamais automatiquement
+            if (openDevToolsOnStart) mainWindow.webContents.openDevTools({ mode: 'detach' })
             mainWindow.show()
         }
     });

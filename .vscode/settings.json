@@ -3,7 +3,7 @@
         "**/.github": true,
 <<<<<<< HEAD
 =======
-        "**/node_modules": true,
+        "**/node_modules": false,
 >>>>>>> 7a792305ac49f25ee48b99ce38a1725ed5033076
         "**/package-lock.json": true,
         "**/dist": true,
